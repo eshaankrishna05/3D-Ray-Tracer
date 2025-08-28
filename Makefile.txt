@@ -1,0 +1,49 @@
+# Compilation flags
+CFLAGS = -Wall -Werror -std=c99 -Ofast
+LDFLAGS = -lm
+
+# Default rule to build and execute MS1_assg, MS2_assg, and FS_assg
+all: MS1 MS2 FS
+	rm -f *.o  # Delete intermediate object files 
+
+# MS1 executable
+MS1: MS1_assg.o vector.o spheres.o color.o
+	gcc $(CFLAGS) -DMS1 MS1_assg.o vector.o spheres.o color.o -o MS1_assg $(LDFLAGS)
+    
+# MS2 executable
+MS2: MS2_assg.o vector.o spheres.o color.o
+	gcc $(CFLAGS) -DMS2 MS2_assg.o vector.o spheres.o color.o -o MS2_assg $(LDFLAGS)
+    
+# FS executable
+FS: FS_assg.o vector.o spheres.o color.o
+	gcc $(CFLAGS) -DFS FS_assg.o vector.o spheres.o color.o -o FS_assg $(LDFLAGS)
+    
+# Compile MS1_assg.o from assg.c
+MS1_assg.o: src/assg.c src/vector.h src/spheres.h src/color.h
+	gcc -DMS1 -c src/assg.c -o MS1_assg.o
+
+# Compile MS2_assg.o from assg.c
+MS2_assg.o: src/assg.c src/vector.h src/spheres.h src/color.h
+	gcc -DMS2 -c src/assg.c -o MS2_assg.o
+
+# Compile FS_assg.o from assg.c
+FS_assg.o: src/assg.c src/vector.h src/spheres.h src/color.h
+	gcc -DFS -c src/assg.c -o FS_assg.o
+
+# Compile vector.o from vector.c
+vector.o: src/vector.c src/vector.h
+	gcc -c src/vector.c -o vector.o
+
+# Compile spheres.o from spheres.c
+spheres.o: src/spheres.c src/spheres.h src/vector.h
+	gcc -c src/spheres.c -o spheres.o
+
+# Compile color.o from color.c
+color.o: src/color.c src/color.h
+	gcc -c src/color.c -o color.o
+
+# Clean up build files
+clean:
+	rm -f *.o
+	rm -f MS1_assg MS2_assg FS_assg
+
